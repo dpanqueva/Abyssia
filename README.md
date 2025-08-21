@@ -152,97 +152,89 @@ Los pilotos en salud e inmobiliario permitirán validar valor de negocio, ajusta
 
 ---
 
-# 🌌 Abyssia – Plataforma SaaS para Consultas Inteligentes sobre Documentos Corporativos
+# 🏗 Arquitectura de Software – Abyssia (versión Spring Boot IA)
 
-Abyssia es una solución SaaS que transforma documentos empresariales en conocimiento accesible y automatizable. Mediante una arquitectura moderna basada en microservicios, IA generativa y conectores seguros, Abyssia permite a las organizaciones consultar sus propios documentos sin moverlos de sus repositorios.
-
----
-
-## 🚀 Visión General
-
-Abyssia permite:
-
-- Consultar documentos corporativos mediante chat inteligente.
-- Automatizar flujos de conocimiento sin comprometer la privacidad.
-- Integrarse fácilmente con repositorios como Amazon S3 y GitHub.
-
-La arquitectura se compone de:
-
-- **Frontend Angular**: interfaz intuitiva para usuarios y administradores.
-- **Backend Spring Boot**: orquestación, seguridad y gestión de usuarios.
-- **Microservicio IA (FastAPI)**: procesamiento semántico y generación de respuestas vía RAG (Retrieval-Augmented Generation).
+![Arquitectura Abyssia](arquitectura/imagen.png)
 
 ---
 
-## 🧩 Componentes Principales
+## 1. Visión General
 
-### 1. Frontend – Angular
+Abyssia es una plataforma SaaS que permite a las empresas consultar y automatizar conocimiento a partir de sus documentos, conservando los documentos en los repositorios del cliente (S3 o GitHub en el MVP).
 
-- Dashboard de administración y configuración de conectores.
-- Chat corporativo para consultas semánticas.
-- Visualización de métricas, auditoría y respuestas generadas.
-- Consumo de APIs REST y GraphQL.
-
-### 2. Backend – Spring Boot
-
-- **API Gateway**: autenticación y distribución de solicitudes.
-- **Servicios**:
-  - `Document Service`: ingesta y metadatos.
-  - `User & Tenant Service`: multi-tenancy, roles y permisos.
-  - `Audit & Metrics Service`: trazabilidad y cumplimiento.
-- **Seguridad**:
-  - OAuth2/OIDC (Keycloak u otros).
-  - Control de acceso por rol y tenant.
-  - Tokens temporales para conectores externos.
-
-### 3. Microservicio de IA – Python / FastAPI
-
-- **Ingesta**:
-  - Descarga desde S3/GitHub.
-  - OCR y conversión a texto.
-  - Chunking y embeddings.
-- **Consulta**:
-  - Recuperación semántica (Retriever).
-  - Generación de respuestas con citas (LLM Generator).
-  - Guardrails: confianza, políticas de “no-answer”, trazabilidad.
-
-### 4. Repositorios Externos
-
-- **Amazon S3**: acceso mediante IAM temporal o claves del cliente.
-- **GitHub**: acceso OAuth y sincronización vía webhooks.
-
-### 5. Almacenamiento Interno
-
-| Componente         | Uso principal                                  |
-|--------------------|------------------------------------------------|
-| PostgreSQL         | Metadatos, usuarios, auditoría                 |
-| Vector DB (pgvector/Qdrant) | Embeddings para búsqueda semántica     |
-| Cache (opcional)   | Reducción de latencia en consultas recientes   |
-
-### 6. Comunicación y Eventos
-
-- Redis / RabbitMQ / Kafka para eventos internos.
-- Webhooks para sincronización con repositorios externos.
-
-### 7. Seguridad y Cumplimiento
-
-- Cifrado TLS en tránsito.
-- No se almacenan documentos originales.
-- Auditoría completa de accesos y consultas.
-- Compatible con normativas: **HIPAA**, **GDPR**, **ISO27001**.
+Toda la lógica de backend, incluyendo la IA/RAG, se implementa en **Spring Boot**, facilitando integración, despliegue y mantenimiento.
 
 ---
 
-## 🔄 Flujo de Información (MVP – S3 y GitHub)
+## 2. Componentes Principales
+
+### a) Frontend – Angular
+
+- Dashboard de usuario y administración de fuentes externas.
+- Chat corporativo para consultas a documentos.
+- Visualización de métricas, logs de auditoría y respuestas generadas.
+- Consumo de APIs REST/GraphQL del backend.
+
+### b) Backend – Spring Boot
+
+- **API Gateway / Orquestador**: recibe solicitudes, valida autenticación y distribuye llamadas a los servicios internos.
+
+#### Servicios principales:
+
+- `Document Service`: registra metadatos de documentos y configuraciones de conectores, inicia pipelines de ingesta.
+- `User & Tenant Service`: gestión de usuarios, roles, permisos y multi-tenancy.
+- `IA / RAG Service`:
+  - Ingesta y normalización de documentos.
+  - Chunking, embeddings y vectorización usando librerías Java compatibles (ej. Deeplearning4j, Java bindings de OpenAI/LLM).
+  - Motor de recuperación semántica (BM25 + embeddings).
+  - Generación de respuestas con LLM.
+  - Guardrails: políticas de “no answer”, confianza mínima y trazabilidad de documentos.
+- `Audit & Metrics Service`: registra consultas, latencias, uso y cumplimiento normativo.
+
+#### Seguridad:
+
+- OAuth2/OIDC para autenticación (Keycloak u otro proveedor).
+- Control de acceso por rol y tenant.
+- Tokens temporales para acceso a conectores externos.
+
+### c) Repositorios Externos
+
+- **Amazon S3**: almacenamiento de objetos corporativos. Abyssia accede usando roles IAM temporales o claves proporcionadas por el cliente.
+- **GitHub**: repositorios privados, wikis o markdown. Abyssia accede vía OAuth y usa webhooks para sincronización de cambios.
+
+### d) Almacenamiento Interno
+
+| Componente                              | Uso principal                                      |
+|-----------------------------------------|---------------------------------------------------|
+| PostgreSQL                              | Metadatos de documentos, usuarios, roles, auditoría |
+| Vector DB (pgvector o Qdrant + Java)    | Embeddings para búsqueda semántica                |
+| Cache temporal (opcional)               | Resultados de consultas recientes                 |
+
+### e) Comunicación y Eventos
+
+- Redis / RabbitMQ / Kafka para eventos de ingesta y actualización.
+- Webhooks para sincronización automática con repositorios externos.
+
+### f) Seguridad y Cumplimiento
+
+- Cifrado TLS para datos en tránsito.
+- Embeddings y metadatos seguros, sin almacenar los documentos originales.
+- Auditoría completa de accesos, consultas y cambios de configuración.
+- Escalable para cumplir normativas de privacidad: **HIPAA**, **GDPR**, **ISO27001**.
+
+---
+
+## 3. Flujo de Información (MVP – S3 y GitHub)
 
 ```mermaid
 graph TD
-A[Usuario registra conector] --> B[Abyssia valida credenciales]
-B --> C[Microservicio IA descarga y normaliza documentos]
-C --> D[Genera chunks y embeddings]
-D --> E[Usuario realiza consulta vía chat]
-E --> F[Backend identifica chunks relevantes]
-F --> G[LLM genera respuesta con citas]
-G --> H[Respuesta + trazabilidad al usuario]
-H --> I[Auditoría registra evento y métricas]
+A[Usuario registra conector externo] --> B[Spring Boot valida credenciales]
+B --> C[Descarga y normaliza documentos]
+C --> D[Chunking y generación de embeddings]
+D --> E[Almacenamiento en vector DB]
+E --> F[Usuario realiza consulta vía chat]
+F --> G[Spring Boot busca chunks relevantes]
+G --> H[LLM genera respuesta con citas]
+H --> I[Respuesta con trazabilidad al usuario]
+I --> J[Auditoría registra evento y métricas]
 
