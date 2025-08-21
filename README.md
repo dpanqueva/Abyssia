@@ -154,7 +154,7 @@ Los pilotos en salud e inmobiliario permitirán validar valor de negocio, ajusta
 
 # 🏗 Arquitectura de Software – Abyssia (versión Spring Boot IA)
 
-![Arquitectura Abyssia](arquitectura/imagen.png)
+![Arquitectura Abyssia](arquitectura/Abyssia.png)
 
 ---
 
