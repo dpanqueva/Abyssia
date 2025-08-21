@@ -1,4 +1,5 @@
 # Abyssia
+![Logos Abyssia](logos/Abyssia-.png)
 # 📘 Propuesta Técnica – Plataforma de IA Transversal Basada en Documentos
 
 ## 1. Resumen Ejecutivo
