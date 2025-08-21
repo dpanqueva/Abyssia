@@ -151,3 +151,98 @@ La combinación de **Spring Boot + Angular + microservicio Python para IA** ofre
 Los pilotos en salud e inmobiliario permitirán validar valor de negocio, ajustar la plataforma y preparar el camino hacia escalamiento global.
 
 ---
+
+# 🌌 Abyssia – Plataforma SaaS para Consultas Inteligentes sobre Documentos Corporativos
+
+Abyssia es una solución SaaS que transforma documentos empresariales en conocimiento accesible y automatizable. Mediante una arquitectura moderna basada en microservicios, IA generativa y conectores seguros, Abyssia permite a las organizaciones consultar sus propios documentos sin moverlos de sus repositorios.
+
+---
+
+## 🚀 Visión General
+
+Abyssia permite:
+
+- Consultar documentos corporativos mediante chat inteligente.
+- Automatizar flujos de conocimiento sin comprometer la privacidad.
+- Integrarse fácilmente con repositorios como Amazon S3 y GitHub.
+
+La arquitectura se compone de:
+
+- **Frontend Angular**: interfaz intuitiva para usuarios y administradores.
+- **Backend Spring Boot**: orquestación, seguridad y gestión de usuarios.
+- **Microservicio IA (FastAPI)**: procesamiento semántico y generación de respuestas vía RAG (Retrieval-Augmented Generation).
+
+---
+
+## 🧩 Componentes Principales
+
+### 1. Frontend – Angular
+
+- Dashboard de administración y configuración de conectores.
+- Chat corporativo para consultas semánticas.
+- Visualización de métricas, auditoría y respuestas generadas.
+- Consumo de APIs REST y GraphQL.
+
+### 2. Backend – Spring Boot
+
+- **API Gateway**: autenticación y distribución de solicitudes.
+- **Servicios**:
+  - `Document Service`: ingesta y metadatos.
+  - `User & Tenant Service`: multi-tenancy, roles y permisos.
+  - `Audit & Metrics Service`: trazabilidad y cumplimiento.
+- **Seguridad**:
+  - OAuth2/OIDC (Keycloak u otros).
+  - Control de acceso por rol y tenant.
+  - Tokens temporales para conectores externos.
+
+### 3. Microservicio de IA – Python / FastAPI
+
+- **Ingesta**:
+  - Descarga desde S3/GitHub.
+  - OCR y conversión a texto.
+  - Chunking y embeddings.
+- **Consulta**:
+  - Recuperación semántica (Retriever).
+  - Generación de respuestas con citas (LLM Generator).
+  - Guardrails: confianza, políticas de “no-answer”, trazabilidad.
+
+### 4. Repositorios Externos
+
+- **Amazon S3**: acceso mediante IAM temporal o claves del cliente.
+- **GitHub**: acceso OAuth y sincronización vía webhooks.
+
+### 5. Almacenamiento Interno
+
+| Componente         | Uso principal                                  |
+|--------------------|------------------------------------------------|
+| PostgreSQL         | Metadatos, usuarios, auditoría                 |
+| Vector DB (pgvector/Qdrant) | Embeddings para búsqueda semántica     |
+| Cache (opcional)   | Reducción de latencia en consultas recientes   |
+
+### 6. Comunicación y Eventos
+
+- Redis / RabbitMQ / Kafka para eventos internos.
+- Webhooks para sincronización con repositorios externos.
+
+### 7. Seguridad y Cumplimiento
+
+- Cifrado TLS en tránsito.
+- No se almacenan documentos originales.
+- Auditoría completa de accesos y consultas.
+- Compatible con normativas: **HIPAA**, **GDPR**, **ISO27001**.
+
+---
+
+## 🔄 Flujo de Información (MVP – S3 y GitHub)
+
+```mermaid
+graph TD
+A[Usuario registra conector] --> B[Abyssia valida credenciales]
+B --> C[Microservicio IA descarga y normaliza documentos]
+C --> D[Genera chunks y embeddings]
+D --> E[Usuario realiza consulta vía chat]
+E --> F[Backend identifica chunks relevantes]
+F --> G[LLM genera respuesta con citas]
+G --> H[Respuesta + trazabilidad al usuario]
+H --> I[Auditoría registra evento y métricas]
+
