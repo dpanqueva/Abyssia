@@ -1,0 +1,253 @@
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Gradiente que cambia con el scroll */
+        .ocean-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: -1;
+            background: linear-gradient(to bottom,
+                    #87CEEB 0%,
+                    /* Azul cielo claro */
+                    #4682B4 8%,
+                    /* Azul acero */
+                    #1E90FF 16%,
+                    /* Azul dodger */
+                    #0066CC 24%,
+                    /* Azul océano */
+                    #003366 32%,
+                    /* Azul marino */
+                    #001133 40%,
+                    /* Azul muy oscuro */
+                    #000011 48%,
+                    /* Casi negro */
+                    #000000 56%
+                    /* Negro total desde aquí */
+                );
+            transition: all 0.3s ease;
+        }
+
+        /* Efecto de rayos de sol */
+        .sun-rays {
+            position: fixed;
+            top: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200%;
+            height: 300px;
+            background: radial-gradient(ellipse at center top,
+                    rgba(255, 255, 255, 0.3) 0%,
+                    rgba(255, 255, 255, 0.1) 40%,
+                    transparent 70%);
+            z-index: -1;
+            opacity: 1;
+            transition: opacity 0.5s ease;
+        }
+
+        /* Partículas flotantes */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-20px) rotate(180deg);
+            }
+        }
+
+        /* Secciones */
+        .section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 80px 0;
+            position: relative;
+        }
+
+        .hero-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 20px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        .depth-section {
+            background: rgba(0, 50, 100, 0.2);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 20px;
+            box-shadow: 0 8px 32px rgba(0, 50, 100, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .abyss-section {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Texto siempre legible en la sección activa */
+        .text-surface,
+        .text-shallow,
+        .text-mid,
+        .text-deep,
+        .text-abyss {
+            color: #FFFFFF;
+            text-shadow: 0 0 15px rgba(0, 0, 0, 0.8);
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        /* Estados de difuminado cuando la sección no está activa */
+        .section.fading .text-surface,
+        .section.fading .text-shallow,
+        .section.fading .text-mid,
+        .section.fading .text-deep,
+        .section.fading .text-abyss {
+            color: rgba(255, 255, 255, 0.3);
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .section.fading .feature-card,
+        .section.fading .hero-section,
+        .section.fading .depth-section,
+        .section.fading .abyss-section {
+            opacity: 0.4;
+        }
+
+        /* Texto que se adapta dinámicamente */
+        .adaptive-text {
+            transition: color 0.3s ease, text-shadow 0.3s ease, opacity 0.3s ease;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 15px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        }
+
+        .logo {
+            font-size: 3.5rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #87CEEB, #1E90FF, #0066CC);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: none;
+        }
+
+        .btn-ocean {
+            background: linear-gradient(45deg, #1E90FF, #0066CC);
+            border: none;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(30, 144, 255, 0.4);
+        }
+
+        .btn-ocean:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(30, 144, 255, 0.6);
+            color: white;
+        }
+
+        .navbar {
+            background: rgba(0, 0, 0, 0.1) !important;
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .navbar-brand,
+        .nav-link {
+            color: white !important;
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            color: #87CEEB !important;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 2.5rem;
+            }
+
+            .hero-section,
+            .depth-section,
+            .abyss-section {
+                margin: 10px;
+                padding: 20px;
+            }
+        }
+
+        /* Efecto de inmersión progresiva */
+        .immersion-1 {
+            filter: brightness(1);
+        }
+
+        .immersion-2 {
+            filter: brightness(0.8);
+        }
+
+        .immersion-3 {
+            filter: brightness(0.6);
+        }
+
+        .immersion-4 {
+            filter: brightness(0.4);
+        }
+
+        .immersion-5 {
+            filter: brightness(0.2);
+        }
